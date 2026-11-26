@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# Fix and check the staged files, then run every linter on the whole tree, as
+# CI does.
+npx --no -- lint-staged
+npm run lint:all

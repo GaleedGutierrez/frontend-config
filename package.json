@@ -1,0 +1,57 @@
+{
+	"name": "frontend-config",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Galeed Gutierrez's shared front-end configs, published as @galeedgutierrez/* packages.",
+	"license": "MIT",
+	"type": "module",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"build": "npm run build --workspaces --if-present",
+		"lint": "eslint ./ --max-warnings 0",
+		"lint:fix": "eslint --fix .",
+		"prettier": "prettier ./ --check",
+		"prettier:fix": "prettier ./ --write",
+		"stylelint": "stylelint \"**/*.css\" --allow-empty-input",
+		"lint-md": "markdownlint-cli2 && npm run lint-text",
+		"lint-md:fix": "markdownlint-cli2 --fix && npm run lint-text:fix",
+		"lint:all": "npm run lint && npm run prettier && npm run lint-md",
+		"typecheck": "tsc -p packages/frontend-config/tsconfig.json",
+		"test": "vitest run",
+		"check-package": "npm run check-package --workspaces --if-present",
+		"verify": "npm run build && npm run lint:all && npm run typecheck && npm run test && npm run check-package",
+		"changeset": "changeset",
+		"release": "npm run build && changeset publish",
+		"prepare": "husky",
+		"version-packages": "changeset version && npm install --package-lock-only",
+		"lint-text": "textlint \"**/*.md\"",
+		"lint-text:fix": "textlint --fix \"**/*.md\""
+	},
+	"prettier": "@galeedgutierrez/frontend-config/prettier",
+	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.18.5",
+		"@changesets/cli": "^3.0.3",
+		"@commitlint/cli": "^21.2.4",
+		"@commitlint/lint": "^21.2.4",
+		"@commitlint/load": "^21.2.4",
+		"@types/node": "^26.6.11",
+		"astro": "^7.4.13",
+		"eslint": "^10.15.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^17.6.2",
+		"markdownlint-cli2": "^0.24.2",
+		"prettier": "3.10.1",
+		"publint": "^0.3.25",
+		"stylelint": "^18.0.0",
+		"textlint": "^16.1.3",
+		"typescript": "^6.0.3",
+		"unocss": "^66.13.0",
+		"vitest": "^5.1.1"
+	},
+	"engines": {
+		"node": ">=26.13.1",
+		"npm": ">=12.2.3"
+	}
+}

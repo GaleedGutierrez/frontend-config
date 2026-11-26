@@ -1,0 +1,26 @@
+# Top-most EditorConfig file. Prettier reads it too: indent_style,
+# indent_size, max_line_length and quote_type become its options.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 4
+max_line_length = 80
+
+# Prettier's singleQuote. .astro covers the frontmatter; HTML attributes
+# keep double quotes (jsxSingleQuote).
+[*.{ts,tsx,mts,cts,js,jsx,cjs,mjs,astro}]
+quote_type = single
+
+# YAML can't indent with tabs.
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+indent_style = space
+indent_size = 2

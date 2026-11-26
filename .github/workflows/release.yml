@@ -1,0 +1,59 @@
+---
+name: 🦋 Release
+on: # yamllint disable-line rule:truthy
+  push:
+    branches: [main]
+
+permissions: {}
+
+# One release at a time: a second push waits instead of racing the first.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: 🦋 Version or publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      # The "Version Packages" pull request and the release tags.
+      contents: write
+      pull-requests: write
+      # Trusted publishing: npm exchanges this OIDC token for a short-lived
+      # publish token, so no NPM_TOKEN secret exists. Provenance is attached
+      # automatically.
+      id-token: write
+    steps:
+      - name: 👍 Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: 🐢 Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: 📥 Install Dependencies
+        run: npm ci
+
+      - name: ✅ Verify
+        run: npm run verify
+
+      # With pending changesets: opens or updates the "Version Packages" pull
+      # request. Once that is merged (no changesets left): publishes every
+      # version that isn't on npm yet and tags it.
+      - name: 🦋 Changesets
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          version-script: npm run version-packages
+          publish-script: npm run release
+          # Conventional Commits, so commitlint passes on main.
+          commit-message: "chore: version packages"
+          pr-title: "chore: version packages"
+          create-github-releases: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

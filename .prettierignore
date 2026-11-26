@@ -1,0 +1,4 @@
+# Prettier also skips what .gitignore lists (dist/, coverage/) and
+# node_modules/.
+CHANGELOG.md
+.changeset/*.md

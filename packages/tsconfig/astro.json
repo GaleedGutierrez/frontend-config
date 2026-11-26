@@ -1,0 +1,52 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"display": "Astro",
+	"extends": ["astro/tsconfigs/strict", "./base.json"],
+	"compilerOptions": {
+		"paths": {
+			"/*": ["${configDir}/public/*"],
+			"@public/*": ["${configDir}/public/*"],
+			"@app/*": ["${configDir}/app/*"],
+			"@tests/*": ["${configDir}/tests/*"],
+			"@e2e/*": ["${configDir}/tests/e2e/*"],
+			"@/*": ["${configDir}/src/*"],
+			"@application/*": ["${configDir}/src/application/*"],
+			"@assets/*": ["${configDir}/src/assets/*"],
+			"@components/*": ["${configDir}/src/components/*"],
+			"@constants/*": ["${configDir}/src/constants/*"],
+			"@context/*": ["${configDir}/src/context/*"],
+			"@data/*": ["${configDir}/src/data/*"],
+			"@domain/*": ["${configDir}/src/domain/*"],
+			"@guard/*": ["${configDir}/src/guard/*"],
+			"@hooks/*": ["${configDir}/src/hooks/*"],
+			"@icons/*": ["${configDir}/src/assets/icons/*"],
+			"@images/*": ["${configDir}/src/assets/images/*"],
+			"@infrastructure/*": ["${configDir}/src/infrastructure/*"],
+			"@models/*": ["${configDir}/src/models/*"],
+			"@modules/*": ["${configDir}/src/modules/*"],
+			"@layouts/*": ["${configDir}/src/layouts/*"],
+			"@pages/*": ["${configDir}/src/pages/*"],
+			"@private/*": ["${configDir}/src/private/*"],
+			"@ui/*": ["${configDir}/src/components/ui/*"],
+			"@redux/*": ["${configDir}/src/redux/*"],
+			"@routes/*": ["${configDir}/src/routes/*"],
+			"@services/*": ["${configDir}/src/services/*"],
+			"@state/*": ["${configDir}/src/state/*"],
+			"@shared/*": ["${configDir}/src/utils/*"],
+			"@store/*": ["${configDir}/src/store/*"],
+			"@styles/*": ["${configDir}/src/styles/*"],
+			"@sections/*": ["${configDir}/src/sections/*"],
+			"@templates/*": ["${configDir}/src/templates/*"],
+			"@utils/*": ["${configDir}/src/utils/*"],
+			"@views/*": ["${configDir}/src/views/*"]
+		}
+	},
+	"include": ["${configDir}/.astro/types.d.ts", "${configDir}/**/*"],
+	"exclude": [
+		"${configDir}/dist",
+		"${configDir}/coverage",
+		"${configDir}/playwright-report",
+		"${configDir}/test-results",
+		"${configDir}/.lighthouseci"
+	]
+}

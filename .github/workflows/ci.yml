@@ -1,0 +1,56 @@
+---
+name: ✅ CI
+on: # yamllint disable-line rule:truthy
+  # Branch pushes run once, through their pull request.
+  push:
+    branches: [main]
+  pull_request:
+    # edited: the title is linted too.
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels the run it makes stale.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  verify:
+    name: ✅ Verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 👍 Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: 🐢 Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: 📥 Install Dependencies
+        run: npm ci
+
+      # Build, every linter, the type check, the tests, publint and attw.
+      - name: ✅ Verify
+        run: npm run verify
+
+      # base..head: the commits on the branch, even after merging main into it.
+      - name: 📝 Lint the PR commits
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: npx commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+
+      - name: 📝 Lint the PR title
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$PR_TITLE" | npx commitlint --verbose

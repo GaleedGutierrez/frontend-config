@@ -1,0 +1,46 @@
+{
+	"name": "@galeedgutierrez/tsconfig",
+	"version": "0.1.0",
+	"description": "Strict TypeScript configs: a base for any project and one for Astro.",
+	"keywords": [
+		"tsconfig",
+		"typescript",
+		"astro"
+	],
+	"homepage": "https://github.com/GaleedGutierrez/frontend-config/tree/main/packages/tsconfig#readme",
+	"bugs": {
+		"url": "https://github.com/GaleedGutierrez/frontend-config/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/GaleedGutierrez/frontend-config.git",
+		"directory": "packages/tsconfig"
+	},
+	"license": "MIT",
+	"author": "Galeed Gutierrez <galeedeveloper@gmail.com> (https://galeedgutierrez.com/)",
+	"exports": {
+		"./base.json": "./base.json",
+		"./astro.json": "./astro.json"
+	},
+	"files": [
+		"base.json",
+		"astro.json"
+	],
+	"peerDependencies": {
+		"astro": ">=7",
+		"typescript": ">=6"
+	},
+	"peerDependenciesMeta": {
+		"astro": {
+			"optional": true
+		}
+	},
+	"engines": {
+		"node": ">=26"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"type": "module"
+}
