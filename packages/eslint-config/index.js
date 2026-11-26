@@ -13,7 +13,6 @@ import { defineConfig } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 // const compat = new FlatCompat();
 import eslintPluginAstro from 'eslint-plugin-astro';
-import checkFile from 'eslint-plugin-check-file';
 import { importX } from 'eslint-plugin-import-x';
 import { configs as jsdocConfigs } from 'eslint-plugin-jsdoc';
 import { configs as jsoncConfigs } from 'eslint-plugin-jsonc';
@@ -32,7 +31,27 @@ import { configs as ymlConfigs } from 'eslint-plugin-yml';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-const CODE_FILES = ['**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,astro}'];
+const CODE_EXTENSIONS = '*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,astro}';
+const CODE_FILES = [`**/${CODE_EXTENSIONS}`];
+
+// Project-root folders whose subfolders unicorn/filename-case names-checks.
+const FOLDER_ROOTS = [
+	'src',
+	'test',
+	'tests',
+	'cypress',
+	'puppeteer',
+	'playwright',
+];
+
+// Files are camelCase or PascalCase (components).
+const FILENAME_CASE = {
+	cases: {
+		camelCase: true,
+		pascalCase: true,
+	},
+	ignore: [/vite-env\.d\.ts$/],
+};
 
 /**
  * Options of {@link galeed}.
@@ -113,7 +132,6 @@ export const galeed = ({ tsconfigRootDir, ignores = [] }) =>
 			plugins: {
 				'simple-import-sort': simpleImportSort,
 				'unused-imports': unusedImports,
-				'check-file': checkFile,
 				'@stylistic': stylistic,
 			},
 
@@ -363,20 +381,6 @@ export const galeed = ({ tsconfigRootDir, ignores = [] }) =>
 					},
 				],
 
-				'check-file/folder-naming-convention': [
-					'error',
-					{
-						'./src/*/': 'KEBAB_CASE',
-						// './src/components/*/': 'PASCAL_CASE',
-						'./src/components/*/components/**': 'PASCAL_CASE',
-						'./cypress/**/': 'KEBAB_CASE',
-						'./puppeteer/**/': 'KEBAB_CASE',
-						'./playwright/**/': 'KEBAB_CASE',
-						'./test/**/': 'KEBAB_CASE',
-						'./tests/**/': 'KEBAB_CASE',
-					},
-				],
-
 				// Safari drops list semantics with `list-style: none`, so lists
 				// that matter (nav, social, chips) keep an explicit role="list".
 				'jsx-a11y-x/no-redundant-roles': ['error', { ul: ['list'] }],
@@ -418,18 +422,10 @@ export const galeed = ({ tsconfigRootDir, ignores = [] }) =>
 			rules: {
 				'unicorn/filename-case': [
 					'error',
-					{
-						cases: {
-							camelCase: true,
-							pascalCase: true,
-						},
-						ignore: [/vite-env\.d\.ts$/],
-						// Folders follow check-file/folder-naming-convention
-						// (kebab-case under src/): unicorn 80 checks them too, in
-						// camelCase, so a folder like src/my-feature failed one rule
-						// or the other.
-						checkDirectories: false,
-					},
+					// Folders are checked only below FOLDER_ROOTS (next block):
+					// unicorn 80 checks every folder by default, package folders
+					// in a monorepo included.
+					{ ...FILENAME_CASE, checkDirectories: false },
 				],
 
 				// Renamed from prevent-abbreviations in unicorn 80. "repo" stays,
@@ -451,6 +447,33 @@ export const galeed = ({ tsconfigRootDir, ignores = [] }) =>
 				// enforces: one-line /** … */ comments and leading asterisks.
 				'unicorn/single-line-block-comment-style': 'off',
 				'unicorn/no-asterisk-prefix-in-documentation-comments': 'off',
+			},
+		},
+		{
+			// Folders are camelCase, like the files. The option is shared with
+			// the filenames, so PascalCase folders pass too.
+			files: FOLDER_ROOTS.map((root) => `${root}/**/${CODE_EXTENSIONS}`),
+			rules: {
+				'unicorn/filename-case': [
+					'error',
+					{ ...FILENAME_CASE, directoryRoots: FOLDER_ROOTS },
+				],
+			},
+		},
+		{
+			// Pages are routes: their file and folder names are the URLs, which
+			// are kebab-case (/my-projects/, not /myProjects/). Folders are left
+			// unchecked, and dynamic routes ([slug].astro) skipped.
+			files: [`src/pages/**/${CODE_EXTENSIONS}`],
+			rules: {
+				'unicorn/filename-case': [
+					'error',
+					{
+						case: 'kebabCase',
+						ignore: [/^\[.+\]/],
+						checkDirectories: false,
+					},
+				],
 			},
 		},
 		{

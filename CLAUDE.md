@@ -79,9 +79,13 @@ fresh clone, because Prettier and commitlint load the built `frontend-config`.
 - `postcss-utopia` ships types for a module named `utopia`:
   `src/types/postcssUtopia.d.ts` declares the real name.
 - `subset-font` ships no types: `src/types/subsetFont.d.ts`.
-- `unicorn/filename-case` has `checkDirectories: false`: folder names belong to
-  `check-file/folder-naming-convention` (kebab-case under `src/`), and unicorn
-  80's camelCase check on folders contradicted it.
+- `unicorn/filename-case` names both files and folders (no
+  `eslint-plugin-check-file`). Folders are checked only below `FOLDER_ROOTS`
+  (`src`, the test folders), through `directoryRoots` in their own `files`
+  block: with no matching root, unicorn 80 checks every folder, a monorepo's
+  kebab-case package folders included. Its options are shared by files and
+  folders, so folders accept PascalCase too. `src/pages/` has its own block:
+  routes are URLs, so kebab-case files, unchecked folders, `[param]` skipped.
 - The post-build steps take the output folder from Astro (`dir`) and the assets
   folder from `build.assets`: never
   `path.join(import.meta.dirname, '..', 'dist')`, which pointed inside the
