@@ -41,8 +41,10 @@ export default [
 
 - Every disable comment needs a `-- reason`, and one that no longer suppresses
   anything fails the lint.
-- Folder names follow `check-file/folder-naming-convention` (kebab-case under
-  `src/`); `unicorn/filename-case` only checks filenames.
+- Folder names follow `check-file/folder-naming-convention`: camelCase under
+  `src/` and in the test folders, PascalCase for nested components. Route
+  folders under `src/pages/` are unchecked, since their names are the URLs
+  (kebab-case). `unicorn/filename-case` only checks filenames.
 - Don't use Astro's shorthand attributes (`<h2 {id}>`): they crash the
   `jsx-a11y-x` rules. Write `id={id}`.
 - The React block is commented out in `index.js`: the starting point for an

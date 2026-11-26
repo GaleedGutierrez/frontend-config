@@ -363,17 +363,20 @@ export const galeed = ({ tsconfigRootDir, ignores = [] }) =>
 					},
 				],
 
+				// Folders are camelCase, like the filenames. Route folders under
+				// src/pages/ stay unchecked: their names are the URLs, which are
+				// kebab-case (/my-projects/, not /myProjects/).
 				'check-file/folder-naming-convention': [
 					'error',
 					{
-						'./src/*/': 'KEBAB_CASE',
+						'./src/*/': 'CAMEL_CASE',
 						// './src/components/*/': 'PASCAL_CASE',
 						'./src/components/*/components/**': 'PASCAL_CASE',
-						'./cypress/**/': 'KEBAB_CASE',
-						'./puppeteer/**/': 'KEBAB_CASE',
-						'./playwright/**/': 'KEBAB_CASE',
-						'./test/**/': 'KEBAB_CASE',
-						'./tests/**/': 'KEBAB_CASE',
+						'./cypress/**/': 'CAMEL_CASE',
+						'./puppeteer/**/': 'CAMEL_CASE',
+						'./playwright/**/': 'CAMEL_CASE',
+						'./test/**/': 'CAMEL_CASE',
+						'./tests/**/': 'CAMEL_CASE',
 					},
 				],
 
@@ -424,10 +427,9 @@ export const galeed = ({ tsconfigRootDir, ignores = [] }) =>
 							pascalCase: true,
 						},
 						ignore: [/vite-env\.d\.ts$/],
-						// Folders follow check-file/folder-naming-convention
-						// (kebab-case under src/): unicorn 80 checks them too, in
-						// camelCase, so a folder like src/my-feature failed one rule
-						// or the other.
+						// Folders follow check-file/folder-naming-convention, which
+						// leaves the route folders under src/pages/ (URLs, so
+						// kebab-case) unchecked. unicorn 80 would check every folder.
 						checkDirectories: false,
 					},
 				],

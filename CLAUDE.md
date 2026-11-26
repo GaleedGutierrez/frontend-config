@@ -80,8 +80,10 @@ fresh clone, because Prettier and commitlint load the built `frontend-config`.
   `src/types/postcssUtopia.d.ts` declares the real name.
 - `subset-font` ships no types: `src/types/subsetFont.d.ts`.
 - `unicorn/filename-case` has `checkDirectories: false`: folder names belong to
-  `check-file/folder-naming-convention` (kebab-case under `src/`), and unicorn
-  80's camelCase check on folders contradicted it.
+  `check-file/folder-naming-convention` (camelCase under `src/` and the test
+  folders, PascalCase for nested components). It leaves the route folders under
+  `src/pages/` unchecked: their names are the URLs, which stay kebab-case.
+  unicorn 80 would check every folder, those included.
 - The post-build steps take the output folder from Astro (`dir`) and the assets
   folder from `build.assets`: never
   `path.join(import.meta.dirname, '..', 'dist')`, which pointed inside the
